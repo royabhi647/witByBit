@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { UseFormRegister, FieldErrors } from 'react-hook-form';
 import frame from '../assets/frame.svg';
+import { useSelector } from "react-redux";
 
 type DescriptionProps = {
   register: UseFormRegister<any>;
@@ -8,6 +9,9 @@ type DescriptionProps = {
 };
 
 const Description: FC<DescriptionProps> = ({ register, errors }) => {
+  const categories = useSelector((state: any) => state.product);
+  const categoriesOptions = categories?.map((category: any) => category.category) || [];
+  console.log("categoriesOptions", categoriesOptions)
   return (
     <div className='rounded shadow-2xl max-w-[500px] p-4'>
       <h2 className="text-[16px] font-semibold mb-3">Description</h2>
@@ -31,9 +35,12 @@ const Description: FC<DescriptionProps> = ({ register, errors }) => {
           {...register('category', { required: 'Category is required' })}
           className="w-full p-1 font-normal text-[14px] cursor-pointer border rounded"
         >
-          <option value="">Select a category</option> {/* Add a placeholder option */}
-          <option value="Shoes">Shoes</option>
-          <option value="T-shirt">T-shirt</option>
+          <option value="">Select a category</option>
+          {categoriesOptions.map((item: string, index: number) => (
+            <option key={index} value={item}>
+              {item}
+            </option>
+          ))}
         </select>
         {errors.category && <p className="text-red-500">{String(errors.category.message)}</p>}
       </div>

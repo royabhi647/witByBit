@@ -5,6 +5,8 @@ import Description from '../components/Description';
 import Variants from '../components/Variants';
 import Combinations from '../components/Combinations';
 import PriceInfo from '../components/PriceInfo';
+import { useSelector } from "react-redux";
+import { addProduct } from "../redux/productSlice";
 
 type CombinationType = {
   id: number;
@@ -16,6 +18,7 @@ type CombinationType = {
 
 const AddProduct: FC = () => {
   const navigate = useNavigate();
+  const products = useSelector((state: any) => state.product);
   const [currentStep, setCurrentStep] = useState(0);
   const [variants, setVariants] = useState([{ option: '', values: [] as string[] }]);
   const [combinations, setCombinations] = useState<CombinationType[]>([
