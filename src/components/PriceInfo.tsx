@@ -55,7 +55,7 @@ const PriceInfo: React.FC<PriceInfoProps> = ({
           />
           <div className="flex pl-4">
             <button
-              onClick={() =>  setDiscountType('percentage') }
+              onClick={(e) =>  {e.preventDefault(); setDiscountType('percentage') }}
               className={`rounded p-1 px-2 transition-colors ${discountType === 'percentage'
                   ? 'bg-[#E6EEF2]'
                   : 'hover:bg-gray-100'
@@ -64,7 +64,7 @@ const PriceInfo: React.FC<PriceInfoProps> = ({
               %
             </button>
             <button
-              onClick={() =>  setDiscountType('fixed') }
+              onClick={(e) =>  {e.preventDefault(); setDiscountType('fixed') }}
               className={`p-1 px-2 rounded transition-colors ${discountType === 'fixed'
                   ? 'bg-[#E6EEF2]'
                   : 'hover:bg-gray-100'
