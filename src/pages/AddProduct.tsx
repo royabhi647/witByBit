@@ -1,12 +1,12 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import Description from '../components/Description';
 import Variants from '../components/Variants';
 import Combinations from '../components/Combinations';
 import PriceInfo from '../components/PriceInfo';
-import { useSelector } from "react-redux";
-import { addProduct } from "../redux/productSlice";
+import { useDispatch } from 'react-redux';
+import { addProduct } from '../redux/productSlice';
 
 type CombinationType = {
   id: number;
@@ -18,9 +18,10 @@ type CombinationType = {
 
 const AddProduct: FC = () => {
   const navigate = useNavigate();
-  const products = useSelector((state: any) => state.product);
+  const dispatch = useDispatch();
   const [currentStep, setCurrentStep] = useState(0);
   const [variants, setVariants] = useState([{ option: '', values: [] as string[] }]);
+  const [productImage, setProductImage] = useState<string>('');
   const [combinations, setCombinations] = useState<CombinationType[]>([
     { id: 0, variant: 'M/Black', sku: '', inStock: false, quantity: null },
     { id: 1, variant: 'M/Red', sku: '', inStock: false, quantity: null },
@@ -40,7 +41,13 @@ const AddProduct: FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch
   } = useForm();
+
+  const handleImageUpload = (base64: string) => {
+    setProductImage(base64);
+  };
 
   const handleCancel = () => {
     navigate('/products');
@@ -54,37 +61,6 @@ const AddProduct: FC = () => {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
-  const onSubmit = (data: any) => {
-    if (duplicateSkus.length > 0) {
-      alert('Please ensure SKUs are unique.');
-      return;
-    }
-    
-    setIsFormSubmitted(true);
-    setTimeout(() => {
-      navigate('/products');
-    }, 2000);
-  };
-
-  useEffect(() => {
-    if (variants.length > 0 && variants.some((variant) => variant.values.length > 0)) {
-      const newCombinations = variants
-        .map((variant) => variant.values)
-        .reduce((acc, values) => {
-          return acc.length === 0 ? values : acc.flatMap((a) => values.map((b) => `${a}/${b}`));
-        }, [] as string[]);
-
-      const combinationsData: CombinationType[] = newCombinations.map((comb, index) => ({
-        id: index,
-        variant: comb, 
-        sku: '',
-        inStock: false,
-        quantity: null  
-      }));
-
-      setCombinations(combinationsData);
-    }
-  }, [variants]);
   const addVariantOption = () => {
     setVariants([...variants, { option: '', values: [] }]);
   };
@@ -97,9 +73,17 @@ const AddProduct: FC = () => {
 
   const handleValuesChange = (index: number, value: string) => {
     const updatedVariants = [...variants];
-    updatedVariants[index].values = value.split(',').map((val) => val.trim());
-    setVariants(updatedVariants);
+    const newValue = value.trim();
+    
+    if (newValue) {
+      updatedVariants[index].values = [
+        ...updatedVariants[index].values,
+        newValue
+      ];
+      setVariants(updatedVariants);
+    }
   };
+  
 
   const removeVariantOption = (index: number) => {
     const updatedVariants = variants.filter((_, i) => i !== index);
@@ -111,7 +95,7 @@ const AddProduct: FC = () => {
     newCombinations[index].sku = value;
     setCombinations(newCombinations);
 
-    const skus = newCombinations.map(c => c.sku);
+    const skus = newCombinations.map((c) => c.sku);
     const newDuplicates = newCombinations
       .map((c, i) => (skus.indexOf(c.sku) !== i && c.sku !== '') ? i : -1)
       .filter(i => i !== -1);
@@ -129,6 +113,40 @@ const AddProduct: FC = () => {
     newCombinations[index].quantity = value;
     setCombinations(newCombinations);
   };
+
+  const removeValue = (variantIndex: number, valueIndex: number) => {
+    const updatedVariants = [...variants];
+    updatedVariants[variantIndex].values = updatedVariants[variantIndex].values.filter((_, i) => i !== valueIndex);
+    setVariants(updatedVariants);
+  };
+
+  const onSubmit = (data: any) => {
+    const productData = {
+      description: {
+        name: data.name,
+        category: data.category,
+        brand: data.brand,
+        image: productImage,
+        price, 
+      },
+      variants,
+      combinations, 
+      priceInfo: {
+        price,
+        discount,
+        discountType,
+      },
+    };
+  
+  
+    dispatch(addProduct(productData));
+  
+    setIsFormSubmitted(true);
+    setTimeout(() => {
+      navigate("/products");
+    }, 2000);
+  };
+  
 
   return (
     <div className="bg-white p-4">
@@ -199,8 +217,8 @@ const AddProduct: FC = () => {
           <div key={index} className="flex items-center text-sm font-medium">
             {index > 0 && <span className="mx-4 text-[#808080]">&gt;</span>}
             <div
-              className={`py-1 rounded ${index <= currentStep ? 'bg-[#DAEDF9] text-[#1F8CD0] px-3' : 'text-[#808080]'
-                }`}
+              className={`py-1 rounded ${index <= currentStep ? 'bg-[#DAEDF9] text-[#1F8CD0] px-3' : 'text-[#808080]'}
+                `}
             >
               {step}
             </div>
@@ -215,10 +233,7 @@ const AddProduct: FC = () => {
         </div>
       ) : (
         <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {currentStep === 0 && (
-            <Description register={register} errors={errors} />
-          )}
-
+          {currentStep === 0 && <Description register={register} errors={errors}  onImageUpload={handleImageUpload}/>}
           {currentStep === 1 && (
             <Variants
               variants={variants}
@@ -226,9 +241,9 @@ const AddProduct: FC = () => {
               handleOptionChange={handleOptionChange}
               handleValuesChange={handleValuesChange}
               removeVariantOption={removeVariantOption}
+              removeValue={removeValue}
             />
           )}
-
           {currentStep === 2 && (
             <Combinations
               combinations={combinations}
@@ -238,7 +253,6 @@ const AddProduct: FC = () => {
               handleQuantityChange={handleQuantityChange}
             />
           )}
-
           {currentStep === 3 && (
             <PriceInfo
               price={price}

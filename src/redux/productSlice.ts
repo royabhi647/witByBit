@@ -4,11 +4,33 @@ interface Product {
   name: string;
   price: number;
   brand: string;
+  image?: string;
+}
+
+interface PriceInfo {
+  price: number;
+  discount: number;
+  discountType: "percentage" | "fixed";
+}
+
+interface Variant {
+  option: string;
+  values: string[];
+}
+
+interface CombinationType {
+}
+
+interface ProductData {
+  description: Product & { category: string };
+  variants: Variant[];
+  combinations: CombinationType[];
+  priceInfo: PriceInfo;
 }
 
 interface Category {
   category: string;
-  products: Product[];
+  products: ProductData[];
 }
 
 const initialState: Category[] = [];
@@ -25,16 +47,18 @@ const productSlice = createSlice({
         state.push({ category: action.payload, products: [] });
       }
     },
-    addProduct(
-      state,
-      action: PayloadAction<{ category: string; product: Product }>
-    ) {
-      const { category, product } = action.payload;
+    addProduct(state, action: PayloadAction<ProductData>) {
+      const { description } = action.payload;
+      const { category } = description;
+
       const categoryIndex = state.findIndex(
         (item) => item.category === category
       );
+
       if (categoryIndex > -1) {
-        state[categoryIndex].products.push(product);
+        state[categoryIndex].products.push(action.payload);
+      } else {
+        state.push({ category, products: [action.payload] });
       }
     },
   },

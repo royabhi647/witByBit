@@ -13,7 +13,7 @@ const Products: FC = () => {
 
   const handleAddCategory = () => {
     if (newCategory.trim()) {
-      dispatch(addCategory(newCategory)); 
+      dispatch(addCategory(newCategory));
       setNewCategory("");
       setIsModalOpen(false);
     }
@@ -47,25 +47,36 @@ const Products: FC = () => {
             key={categoryItem.category}
             className="bg-[#F8F8F8] p-4 rounded shadow"
           >
-            <h3 className="text-lg font-semibold border-b pb-2 mb-4">
+            <h3 className="text-[16px] font-semibold border-b pb-2 mb-4">
               {categoryItem.category}
             </h3>
             <div className="space-y-4">
               {categoryItem.products.map((product: any) => (
                 <div
-                  key={product.name}
-                  className="flex items-center border p-4 rounded shadow-sm bg-white"
+                  key={product.description.name}
+                  className="flex items-center border p-4 rounded-lg shadow-md bg-white"
                 >
-                  <div className="w-16 h-16 bg-gray-200 rounded mr-4"></div>
+                  <div className="w-20 h-20 bg-gray-200 rounded mr-4 overflow-hidden">
+                    <img
+                      src={product.description.image}
+                      alt={product.description.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
 
-                  <div>
-                    <h4 className="text-base font-medium">{product.name}</h4>
-                    <p className="text-sm text-gray-500">₹{product.price}</p>
-                    <span className="text-sm text-blue-500">{product.brand}</span>
+                  <div className="flex flex-col">
+                    <h4 className="text-[16px] font-medium">{product.description.name}</h4>
+
+                    <p className="mt-1 text-sm text-[14px]">₹{product.priceInfo.price}</p>
+
+                    <span className="mt-2 text-[12px] font-medium text-[#1F8CD0] bg-[#ECF7FF] px-3 py-1 rounded-md flex items-center justify-center">
+                      {product.description.brand}
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
+
           </div>
         ))}
       </div>
