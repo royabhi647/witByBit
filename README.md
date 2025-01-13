@@ -2,6 +2,8 @@
 
 This project is a Product Management System built using ReactJS, Tailwind CSS, TypeScript, Redux Toolkit and React Hook Form. The application features a sidebar navigation system, responsive grids for product categorization, a category addition functionality, and a multi-step product addition form with data retention.
 
+## [Deployment link](https://abhii-witbybit.netlify.app/)
+
 ## Features
 
 ### Sidebar Navigation
