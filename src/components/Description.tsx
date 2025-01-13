@@ -17,7 +17,7 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { 
+      if (file.size > 5 * 1024 * 1024) {
         alert('File size should not exceed 5MB');
         return;
       }
@@ -46,7 +46,7 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
           })}
           className="w-full p-1 border rounded outline-none"
         />
-        {errors.name && <p className="text-red-500">{String(errors.name.message)}</p>}
+        {errors.name && <p className="text-red-500 text-sm">{String(errors.name.message)}</p>}
       </div>
 
       <div className="mb-2">
@@ -62,7 +62,7 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
             </option>
           ))}
         </select>
-        {errors.category && <p className="text-red-500">{String(errors.category.message)}</p>}
+        {errors.category && <p className="text-red-500 text-sm">{String(errors.category.message)}</p>}
       </div>
 
       <div className="mb-2">
@@ -76,15 +76,14 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
           })}
           className="w-full p-1 border rounded outline-none"
         />
-        {errors.brand && <p className="text-red-500">{String(errors.brand.message)}</p>}
+        {errors.brand && <p className="text-red-500 text-sm">{String(errors.brand.message)}</p>}
       </div>
 
       <div className="mt-4">
         <div className="mb-2">
           <label className="font-normal text-[14px]">Product Image </label>
-          {errors.productImage && <p className="text-red-500">{String(errors.productImage.message)}</p>}
         </div>
-        
+
         <div className="flex items-start space-x-4">
           <div>
             <label
@@ -100,7 +99,6 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
               accept="image/*"
               className="hidden"
               {...register('productImage', {
-                required: 'Product image is required',
                 onChange: (e) => handleImageUpload(e)
               })}
             />
@@ -109,9 +107,9 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
 
           {previewUrl && (
             <div className="mt-2">
-              <img 
-                src={previewUrl} 
-                alt="Preview" 
+              <img
+                src={previewUrl}
+                alt="Preview"
                 className="h-20 w-20 object-cover rounded border"
               />
             </div>

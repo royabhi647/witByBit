@@ -70,15 +70,15 @@ const Variants: FC<VariantsProps> = ({
                 {variant.values.map((value, valueIndex) => (
                   <div 
                     key={valueIndex} 
-                    className="flex items-center bg-gray-100 px-2 py-1 rounded-full"
+                    className="flex items-center bg-[#EFEFEF] px-2 py-1 rounded-md gap-2"
                   >
                     <span className="text-[14px]">{value}</span>
                     <button
                       type="button"
                       onClick={() => removeValue(index, valueIndex)}
-                      className="ml-1 hover:bg-gray-200 rounded-full p-1"
+                      className="ml-1 hover:bg-gray-200 rounded-full p-1 text-sm flex items-center"
                     >
-                      <img src={DeleteIcon} className="h-3 w-3" />
+                      X
                     </button>
                   </div>
                 ))}

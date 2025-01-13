@@ -41,9 +41,15 @@ const AddProduct: FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-    watch
-  } = useForm();
+    trigger 
+  } = useForm({
+    mode: "onChange", 
+    defaultValues: {
+      name: "",
+      category: "",
+      brand: "",
+    }
+  });
 
   const handleImageUpload = (base64: string) => {
     setProductImage(base64);
@@ -53,8 +59,16 @@ const AddProduct: FC = () => {
     navigate('/products');
   };
 
-  const nextStep = () => {
-    if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
+  const nextStep = async() => {
+    let isValid = true;
+
+    if (currentStep === 0) {
+      isValid = await trigger(['name', 'category', 'brand']);
+    }
+
+    if (isValid && currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
   };
 
   const previousStep = () => {
@@ -144,7 +158,7 @@ const AddProduct: FC = () => {
     setIsFormSubmitted(true);
     setTimeout(() => {
       navigate("/products");
-    }, 2000);
+    }, 1000);
   };
   
 

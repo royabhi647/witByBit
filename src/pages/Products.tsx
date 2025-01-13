@@ -1,7 +1,12 @@
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { addCategory } from "../redux/productSlice";
+
+type FormValues = {
+  categoryName: string;
+};
 
 const Products: FC = () => {
   const dispatch = useDispatch();
@@ -9,14 +14,18 @@ const Products: FC = () => {
   const categories = useSelector((state: any) => state.product);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
 
-  const handleAddCategory = () => {
-    if (newCategory.trim()) {
-      dispatch(addCategory(newCategory));
-      setNewCategory("");
-      setIsModalOpen(false);
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>();
+
+  const handleAddCategory: SubmitHandler<FormValues> = (data) => {
+    dispatch(addCategory(data.categoryName));
+    reset();
+    setIsModalOpen(false);
   };
 
   return (
@@ -76,7 +85,6 @@ const Products: FC = () => {
                 </div>
               ))}
             </div>
-
           </div>
         ))}
       </div>
@@ -85,28 +93,41 @@ const Products: FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded shadow-lg w-96">
             <h2 className="text-xl font-semibold mb-2">Add Category</h2>
-            <p className="font-normal text-sm mb-1">Category name *</p>
-            <input
-              type="text"
-              placeholder="Enter category name"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-1 mb-4 outline-none"
-            />
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-[#E1E7EB] text-[#1F8CD0] px-6 py-1 rounded text-[16px]"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddCategory}
-                className="bg-blue-500 text-white px-6 py-1 rounded shadow"
-              >
-                Save
-              </button>
-            </div>
+            <form onSubmit={handleSubmit(handleAddCategory)}>
+              <p className="font-normal text-sm mb-1">Category name *</p>
+              <input
+                type="text"
+                placeholder="Enter category name"
+                {...register("categoryName", { required: "Category name is required" })}
+                className={`w-full border rounded px-3 py-1 mb-2 outline-none ${
+                  errors.categoryName ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              {errors.categoryName && (
+                <p className="text-red-500 text-sm mb-2">
+                  {errors.categoryName.message}
+                </p>
+              )}
+
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    reset();
+                    setIsModalOpen(false);
+                  }}
+                  className="bg-[#E1E7EB] text-[#1F8CD0] px-6 py-1 rounded text-[16px]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-6 py-1 rounded shadow"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
