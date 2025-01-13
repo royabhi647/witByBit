@@ -17,7 +17,7 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 5 * 1024 * 1024) { 
         alert('File size should not exceed 5MB');
         return;
       }
@@ -81,7 +81,7 @@ const Description: FC<DescriptionProps> = ({ register, errors, onImageUpload }) 
 
       <div className="mt-4">
         <div className="mb-2">
-          <label className="font-normal text-[14px]">Product Image *</label>
+          <label className="font-normal text-[14px]">Product Image </label>
           {errors.productImage && <p className="text-red-500">{String(errors.productImage.message)}</p>}
         </div>
         
