@@ -1,50 +1,50 @@
-# React + TypeScript + Vite
+# Assignment: Product Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a Product Management System built using ReactJS, Tailwind CSS, TypeScript, Redux Toolkit and React Hook Form. The application features a sidebar navigation system, responsive grids for product categorization, a category addition functionality, and a multi-step product addition form with data retention.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Sidebar Navigation
+- A working sidebar navigation system with routes.
+- Currently, the "Products" screen is implemented.
 
-## Expanding the ESLint configuration
+### Products Screen
+- Displays products in a categorized manner using responsive grids.
+- **Add Category**: Adds a new category to the grid dynamically.
+- **Add Product**: Redirects to a multi-step form for product addition.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Add Product Screen
+- A multi-step form for adding products like Description, Variants, Combinations and Price Info.
+- Data retention when navigating between steps.
+- Field validation as per the design specifications.
+- On confirmation, redirects back to the Products screen with the new product added.
 
-- Configure the top-level `parserOptions` property like this:
+## Tech Stack
+- **Framework**: ReactJS (with TypeScript)
+- **Styling**: Tailwind CSS
+- **State Management**: Redux Toolkit
+- **Form Handling**: React Hook Form
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Installation
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/royabhi647/witByBit.git
+   cd witByBit
+   ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser and navigate to:
+   ```
+   http://localhost:5174
+   ```
